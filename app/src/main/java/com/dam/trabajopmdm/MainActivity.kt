@@ -14,6 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.dam.trabajopmdm.ui.theme.TrabajoPMDMTheme
 
 class MainActivity : ComponentActivity() {
+    // rama mauro
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
