@@ -1,0 +1,1 @@
+![DiagramaEstados_SimonDice.png](Images/DiagramaEstados_SimonDice.png)
