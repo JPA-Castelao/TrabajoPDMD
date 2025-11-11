@@ -18,6 +18,15 @@ class MiViewModel(): ViewModel() {
     //variable puntuacion
     val puntuacion = MutableStateFlow<Int?>(0)
 
+    //variable record
+    val record = MutableStateFlow<Int>(0)
+
+    //variable ronda
+    val ronda = MutableStateFlow<Int>(1)
+
+    //variable posicion
+    val posicion = 0
+
     //Función para crear un número random
     fun numeroRandom(){
         estadoActual.value = Estados.GENERANDO
@@ -30,7 +39,7 @@ class MiViewModel(): ViewModel() {
     //Funcion para actualizar el número random
     fun actualizarNumero(numero: Int){
         Log.d("ViewModel","Actualizando el numero de la clase Datos")
-        Datos.numero = numero
+        Datos.numero.add(numero)
         estadoActual.value = Estados.ADIVINANDO
         Log.d("ViewModel", "Estado adivinando")
     }
