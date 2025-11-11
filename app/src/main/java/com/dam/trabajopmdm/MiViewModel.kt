@@ -53,6 +53,4 @@ class MiViewModel(): ViewModel() {
         puntuacion.value = 0
         estadoActual.value = Estados.INICIO
     }
-
-
 }
