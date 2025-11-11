@@ -35,5 +35,24 @@ class MiViewModel(): ViewModel() {
         Log.d("ViewModel", "Estado adivinando")
     }
 
+    fun corregirOpción(numeroColor: Int): Boolean{
+        Log.d("ViewModel", "Comprobando si la opción es correcta")
+        return if (numeroColor == Datos.numero){
+            Log.d("MiViewModel","Es correcto")
+            numeroRandom()
+            puntuacion.value = puntuacion.value?.plus(1)
+            true
+        }else{
+            Log.d("MiViewModel","Error, has perdido")
+            derrota()
+            false
+        }
+    }
+
+    fun derrota(){
+        puntuacion.value = 0
+        estadoActual.value = Estados.INICIO
+    }
+
 
 }
