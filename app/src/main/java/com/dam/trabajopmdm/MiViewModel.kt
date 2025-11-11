@@ -68,7 +68,6 @@ class MiViewModel(): ViewModel() {
             false
         }
     }
-
     fun cambiarRonda(){
         posicion = 0
         ronda.value = ronda.value.plus(1)
