@@ -6,7 +6,8 @@ import androidx.compose.ui.graphics.Color
  * Clase para almacenar los datos del juego
  */
 object Datos {
-    var numero = 0
+    var numero: ArrayList<Int> = ArrayList()
+    var record = 0
 }
 
 /**
