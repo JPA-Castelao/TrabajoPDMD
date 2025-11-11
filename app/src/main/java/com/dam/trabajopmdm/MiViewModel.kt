@@ -50,7 +50,6 @@ class MiViewModel(): ViewModel() {
     fun mostrarSerie(serie: ArrayList<Int>){
         Log.d("ViewModel","Estado adivinando, secuencia: $serie")
     }
-
     fun corregirOpcion(numeroColor:Int): Boolean{
         Log.d("ViewModel","Combrobando si la opción escogida es correcta...")
         return if (numeroColor == Datos.numero[posicion]){
