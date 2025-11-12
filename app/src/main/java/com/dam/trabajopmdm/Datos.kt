@@ -14,10 +14,10 @@ object Datos {
  * Colores utilizados
  */
 enum class Colores(val color: Color, val txt: String) {
-    CLASE_VERDE(color = Color.Green, txt = "Do alto"),
-    CLASE_ROJO(color = Color.Red, txt = "Mi medio-alto"),
-    CLASE_AZUL(color = Color.Blue, txt = "Sol medio-bajo"),
-    CLASE_AMARILLO(color = Color.Yellow, txt = "Do bajo"),
+    CLASE_VERDE(color = Color.Green, txt = "Verde"),
+    CLASE_ROJO(color = Color.Red, txt = "Rojo"),
+    CLASE_AZUL(color = Color.Blue, txt = "Azul"),
+    CLASE_AMARILLO(color = Color.Yellow, txt = "Amarillo"),
     CLASE_START(color = Color.Magenta, txt = "Start")
 }
 
