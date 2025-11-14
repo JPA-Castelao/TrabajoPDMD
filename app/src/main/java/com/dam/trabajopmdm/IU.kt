@@ -59,7 +59,6 @@ fun IU(miViewModel: MiViewModel) {
         }
     }
 
-
     @Composable
     fun Puntuacion(puntuacion: Int?, ronda: Int,record: Int, estados: Estados){
         Text(text="Estado: $estados")
