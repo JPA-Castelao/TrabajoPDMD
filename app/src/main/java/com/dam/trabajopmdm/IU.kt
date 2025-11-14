@@ -42,51 +42,57 @@ fun IU(miViewModel: MiViewModel) {
     //variable para el estado del boton
     val estadoActual = miViewModel.estadoActual.collectAsState().value
 
-@Composable
-fun Boton(viewModel: MiViewModel, enum_color: Colores){
-    val activo = viewModel.estadoActual.collectAsState().value
-    Button(
-        enabled = activo.boton_activo,
-        colors = ButtonDefaults.buttonColors(enum_color.color),
-        onClick = {
-            Log.d("Juego",enum_color.txt+" numero: "+enum_color.ordinal)
-            viewModel.corregirOpcion(enum_color.ordinal)
-        },
-        shape = RoundedCornerShape(0.dp),
-        modifier = Modifier.size(150.dp).padding(15.dp)
-    ) {
-        Text(text = enum_color.txt,
-            fontSize = 15.sp,
-            color = Color.Black)
-    }
-}
-@Composable
-fun Botonera(miViewModel: MiViewModel){
-    Column(modifier = Modifier.padding(16.dp)){
-        Row{
-            Boton(miViewModel, Colores.CLASE_ROJO)
-            Boton(miViewModel, Colores.CLASE_AZUL)
-        }
-        Row{
-            Boton(miViewModel, Colores.CLASE_AMARILLO)
-            Boton(miViewModel, Colores.CLASE_VERDE)
+    @Composable
+    fun Boton(viewModel: MiViewModel, enum_color: Colores) {
+        val activo = viewModel.estadoActual.collectAsState().value
+        Button(
+            enabled = activo.boton_activo,
+            colors = ButtonDefaults.buttonColors(enum_color.color),
+            onClick = {
+                Log.d("Juego", enum_color.txt + " numero: " + enum_color.ordinal)
+                viewModel.corregirOpcion(enum_color.ordinal)
+            },
+            shape = RoundedCornerShape(0.dp),
+            modifier = Modifier.size(150.dp).padding(15.dp)
+        ) {
+            Text(
+                text = enum_color.txt,
+                fontSize = 15.sp,
+                color = Color.Black
+            )
         }
     }
-}
-@Composable
-fun Boton_Start(miViewModel: MiViewModel, enum_color: Colores) {
-    val estado = miViewModel.estadoActual.collectAsState().value
-    Button(
-        enabled = estado.start_activo,
-        onClick = {
-            Log.d("Juego","Empieza la partida")
-            miViewModel.numeroRandom()
-        }) {
-        Text(text = "Start")
+
+    @Composable
+    fun Botonera(miViewModel: MiViewModel) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Row {
+                Boton(miViewModel, Colores.CLASE_ROJO)
+                Boton(miViewModel, Colores.CLASE_AZUL)
+            }
+            Row {
+                Boton(miViewModel, Colores.CLASE_AMARILLO)
+                Boton(miViewModel, Colores.CLASE_VERDE)
+            }
+        }
     }
-}
-@Preview(showBackground = true)
-@Composable
-fun IUPreview() {
-    IU(miViewModel = MiViewModel())
+
+    @Composable
+    fun Boton_Start(miViewModel: MiViewModel, enum_color: Colores) {
+        val estado = miViewModel.estadoActual.collectAsState().value
+        Button(
+            enabled = estado.start_activo,
+            onClick = {
+                Log.d("Juego", "Empieza la partida")
+                miViewModel.numeroRandom()
+            }) {
+            Text(text = "Start")
+        }
+    }
+
+    @Preview(showBackground = true)
+    @Composable
+    fun IUPreview() {
+        IU(miViewModel = MiViewModel())
+    }
 }
