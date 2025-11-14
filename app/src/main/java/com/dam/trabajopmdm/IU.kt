@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
@@ -41,83 +42,51 @@ fun IU(miViewModel: MiViewModel) {
     //variable para el estado del boton
     val estadoActual = miViewModel.estadoActual.collectAsState().value
 
-    //botones en horizontal
-    Column(
-        modifier = Modifier.fillMaxWidth().fillMaxHeight().padding(20.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceAround
-    ){
-        Column {
-            Row{
-                //creo un boton rojo
+    @Composable
+    fun Boton(viewModel: MiViewModel, enum_color: Colores) {
+        val activo = viewModel.estadoActual.collectAsState().value
+        Button(
+            enabled = activo.boton_activo,
+            colors = ButtonDefaults.buttonColors(enum_color.color),
+            onClick = {
+                Log.d("Juego", enum_color.txt + " numero: " + enum_color.ordinal)
+                viewModel.corregirOpcion(enum_color.ordinal)
+            },
+            shape = RoundedCornerShape(0.dp),
+            modifier = Modifier.size(150.dp).padding(15.dp)
+        ) {
+            Text(
+                text = enum_color.txt,
+                fontSize = 15.sp,
+                color = Color.Black
+            )
+        }
+    }
+
+    @Composable
+    fun Botonera(miViewModel: MiViewModel) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Row {
                 Boton(miViewModel, Colores.CLASE_ROJO)
-
-                //creo un boton verde
-                Boton(miViewModel, Colores.CLASE_VERDE)
-
-            }
-            Row{
-                //creo un boton azul
                 Boton(miViewModel, Colores.CLASE_AZUL)
-
-
-                //creo un boton amarillo
+            }
+            Row {
                 Boton(miViewModel, Colores.CLASE_AMARILLO)
-
+                Boton(miViewModel, Colores.CLASE_VERDE)
             }
         }
-        //creo boton start
-        Boton_Start(miViewModel, Colores.CLASE_START)
     }
-}
 
-@Composable
-fun Boton(miViewModel: MiViewModel, enum_color: Colores) {
-
-    // para que sea mas facil la etiqueta del log
-    val TAG_LOG: String = "miDebug"
-
-    // separador entre botones
-    Spacer(modifier = Modifier.size(10.dp))
-
-    Button(
-        // utilizamos el color del enum
-        colors =  ButtonDefaults.buttonColors(enum_color.color),
-        onClick = {
-            Log.d(TAG_LOG, "Dentro del boton: ${enum_color.ordinal}")
-            miViewModel.corregirOpcion(enum_color.ordinal)
-        },
-        modifier = Modifier
-            .size((80).dp, (40).dp)
-    ) {
-        // utilizamos el texto del enum
-        Text(text = enum_color.txt, fontSize = 10.sp)
+    @Composable
+    fun Boton_Start(miViewModel: MiViewModel, enum_color: Colores) {
+        val estado = miViewModel.estadoActual.collectAsState().value
+        Button(
+            enabled = estado.start_activo,
+            onClick = {
+                Log.d("Juego", "Empieza la partida")
+                miViewModel.numeroRandom()
+            }) {
+            Text(text = "Start")
+        }
     }
-}
-
-@Composable
-fun Boton_Start(miViewModel: MiViewModel, enum_color: Colores) {
-
-    // para que sea mas facil la etiqueta del log
-    val TAG_LOG: String = "miDebug"
-    // separador entre botones
-    Spacer(modifier = Modifier.size(40.dp))
-    Button(
-        // utilizamos el color del enum
-        colors =  ButtonDefaults.buttonColors(enum_color.color),
-        onClick = {
-            Log.d(TAG_LOG, "Dentro del Start")
-            miViewModel.numeroRandom()
-        },
-        modifier = Modifier
-            .size((100).dp, (40).dp)
-    ) {
-        // utilizamos el texto del enum
-        Text(text = enum_color.txt, fontSize = 10.sp)
-    }
-}
-@Preview(showBackground = true)
-@Composable
-fun IUPreview() {
-    IU(miViewModel = MiViewModel())
 }
