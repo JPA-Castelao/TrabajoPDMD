@@ -89,10 +89,4 @@ fun IU(miViewModel: MiViewModel) {
             Text(text = "Start")
         }
     }
-
-    @Preview(showBackground = true)
-    @Composable
-    fun IUPreview() {
-        IU(miViewModel = MiViewModel())
-    }
 }
