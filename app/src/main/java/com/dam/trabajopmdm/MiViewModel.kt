@@ -6,9 +6,12 @@ import androidx.compose.ui.util.packInts
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.compose.dropUnlessResumed
+import androidx.lifecycle.viewModelScope
 import com.dam.mvvm_basic.Datos
 import com.dam.mvvm_basic.Estados
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.processNextEventInCurrentThread
 
 class MiViewModel(): ViewModel() {
@@ -51,6 +54,9 @@ class MiViewModel(): ViewModel() {
         Log.d("ViewModel","Estado adivinando, secuencia: $serie")
     }
     fun corregirOpcion(numeroColor:Int): Boolean{
+        viewModelScope.launch {
+            delay(1500)
+        }
         Log.d("ViewModel","Combrobando si la opción escogida es correcta...")
         return if (numeroColor == Datos.numero[posicion]){
             Log.d("ViewModel","ES CORRECTO !")
