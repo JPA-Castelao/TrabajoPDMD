@@ -32,6 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dam.mvvm_basic.Colores
+import com.dam.mvvm_basic.Datos
 import com.dam.mvvm_basic.Estados
 import kotlinx.coroutines.processNextEventInCurrentThread
 
@@ -66,23 +67,24 @@ fun IU(miViewModel: MiViewModel) {
         Text(text="Puntuacion: $puntuacion\n Record: $record")
     }
     @Composable
-    fun Boton(viewModel: MiViewModel, enum_color: Colores) {
-        val activo = viewModel.estadoActual.collectAsState().value
+    fun Boton(miViewModel: MiViewModel, enum_color: Colores) {
+        val activo = miViewModel.estadoActual.collectAsState().value
+        Spacer(modifier = Modifier.size(10.dp))
+
         Button(
             enabled = activo.boton_activo,
+            //utilizamos el color del enum
             colors = ButtonDefaults.buttonColors(enum_color.color),
             onClick = {
-                Log.d("Juego", enum_color.txt + " numero: " + enum_color.ordinal)
-                viewModel.corregirOpcion(enum_color.ordinal)
+                Log.d("Juego", "Dentro del boton: ${enum_color.ordinal}")
+                Log.d("Juego", "Dentro del boton - Estado: ${activo.ordinal}")
+                miViewModel.corregirOpcion(enum_color.ordinal)
             },
-            shape = RoundedCornerShape(0.dp),
-            modifier = Modifier.size(150.dp).padding(15.dp)
+            modifier = Modifier
+                .size((80).dp, (40).dp)
         ) {
-            Text(
-                text = enum_color.txt,
-                fontSize = 15.sp,
-                color = Color.Black
-            )
+            //utilizamos el texto del enum
+            Text(text = enum_color.txt, fontSize = 10.sp)
         }
     }
 

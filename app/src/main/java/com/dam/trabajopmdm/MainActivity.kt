@@ -16,32 +16,18 @@ import com.dam.trabajopmdm.ui.theme.TrabajoPMDMTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val miViewModel: MiViewModel = MiViewModel()
         enableEdgeToEdge()
         setContent {
-            TrabajoPMDMTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
-            }
+            IU(miViewModel)
         }
     }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
 }
 
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
     TrabajoPMDMTheme {
-        Greeting("Android")
+        IU(miViewModel = MiViewModel())
     }
 }
