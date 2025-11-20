@@ -70,10 +70,8 @@ fun IU(miViewModel: MiViewModel) {
     fun Boton(miViewModel: MiViewModel, enum_color: Colores) {
         val activo = miViewModel.estadoActual.collectAsState().value
         Spacer(modifier = Modifier.size(10.dp))
-
         Button(
             enabled = activo.boton_activo,
-            //utilizamos el color del enum
             colors = ButtonDefaults.buttonColors(enum_color.color),
             onClick = {
                 Log.d("Juego", "Dentro del boton: ${enum_color.ordinal}")
@@ -83,7 +81,6 @@ fun IU(miViewModel: MiViewModel) {
             modifier = Modifier
                 .size((80).dp, (40).dp)
         ) {
-            //utilizamos el texto del enum
             Text(text = enum_color.txt, fontSize = 10.sp)
         }
     }
