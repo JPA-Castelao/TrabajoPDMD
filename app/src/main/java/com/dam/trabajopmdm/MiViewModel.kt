@@ -1,8 +1,10 @@
 package com.dam.trabajopmdm
 
+import android.app.Application
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.util.packInts
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.compose.dropUnlessResumed
@@ -14,7 +16,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.processNextEventInCurrentThread
 
-class MiViewModel(): ViewModel() {
+
+class MiViewModel(application: Application) : AndroidViewModel(application) {
     // variable estados del juego
     val estadoActual: MutableStateFlow<Estados> = MutableStateFlow(Estados.INICIO)
 
@@ -34,32 +37,33 @@ class MiViewModel(): ViewModel() {
     var posicion = 0
 
     //Función para crear un número random
-    fun numeroRandom(){
+    fun numeroRandom() {
         estadoActual.value = Estados.GENERANDO
-        Log.d("ViewModel","Estado generando")
+        Log.d("ViewModel", "Estado generando")
         _numbers.value = (0..3).random()
-        Log.d("ViewModel","Número random generado: $_numbers")
+        Log.d("ViewModel", "Número random generado: $_numbers")
         actualizarNumero(_numbers.value)
     }
 
     //Funcion para actualizar el número random
-    fun actualizarNumero(numero: Int){
-        Log.d("ViewModel","Actualizando el numero de la clase Datos")
+    fun actualizarNumero(numero: Int) {
+        Log.d("ViewModel", "Actualizando el numero de la clase Datos")
         Datos.numero.add(numero)
         estadoActual.value = Estados.ADIVINANDO
         mostrarSerie(Datos.numero)
     }
 
-    fun mostrarSerie(serie: ArrayList<Int>){
-        Log.d("ViewModel","Estado adivinando, secuencia: $serie")
+    fun mostrarSerie(serie: ArrayList<Int>) {
+        Log.d("ViewModel", "Estado adivinando, secuencia: $serie")
     }
-    fun corregirOpcion(numeroColor:Int): Boolean{
+
+    fun corregirOpcion(numeroColor: Int): Boolean {
         viewModelScope.launch {
             delay(1500)
         }
-        Log.d("ViewModel","Combrobando si la opción escogida es correcta...")
-        return if (numeroColor == Datos.numero[posicion]){
-            Log.d("ViewModel","ES CORRECTO !")
+        Log.d("ViewModel", "Combrobando si la opción escogida es correcta...")
+        return if (numeroColor == Datos.numero[posicion]) {
+            Log.d("ViewModel", "ES CORRECTO !")
             posicion++
             if (Datos.numero.size == posicion) {
                 cambiarRonda()
@@ -67,19 +71,21 @@ class MiViewModel(): ViewModel() {
             puntuacion.value = puntuacion.value?.plus(1)
 
             true
-        }else{
-            Log.d("ViewModel","ERROR, HAS PERDIDO")
+        } else {
+            Log.d("ViewModel", "ERROR, HAS PERDIDO")
             derrota()
             false
         }
     }
-    fun cambiarRonda(){
+
+    fun cambiarRonda() {
         posicion = 0
         ronda.value = ronda.value.plus(1)
         numeroRandom()
     }
-    fun derrota(){
-        if (record.value < puntuacion.value!!){
+
+    fun derrota() {
+        if (record.value < puntuacion.value!!) {
             record.value = puntuacion.value!!
         }
         puntuacion.value = 0

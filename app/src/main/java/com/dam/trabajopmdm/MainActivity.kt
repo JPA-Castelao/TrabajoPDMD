@@ -1,5 +1,6 @@
 package com.dam.trabajopmdm
 
+import android.app.Application
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -16,7 +17,7 @@ import com.dam.trabajopmdm.ui.theme.TrabajoPMDMTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val miViewModel: MiViewModel = MiViewModel()
+        val miViewModel: MiViewModel = MiViewModel(application)
         enableEdgeToEdge()
         setContent {
             IU(miViewModel)
