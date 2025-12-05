@@ -1,9 +1,7 @@
 package com.dam.trabajopmdm
 
-
 import android.content.Context
 import android.content.SharedPreferences
-import androidx.core.content.edit
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -12,63 +10,74 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 
+/**
+ * Clase de test unitario para verificar el comportamiento de ControladorPreference.
+ * Usamos Mocks para simular el Context y SharedPreferences, que son dependencias de Android.
+ */
 class ControladorPreferenceTest {
 
-    // 1. Mocks de las dependencias de Android
+    // 1. Declaración de Mocks
+    // 'mock()' es una función de la librería Mockito-Kotlin que crea objetos simulados.
     private val mockContext: Context = mock()
     private val mockSharedPreferences: SharedPreferences = mock()
     private val mockEditor: SharedPreferences.Editor = mock()
 
-    // Constantes de la clase original
+    // Constantes copiadas de la clase original para usarlas en los tests
     private val PREFS_NAME = "record_preferences"
     private val KEY_RECORD = "record"
     private val KEY_FECHA = "fecha"
 
+    /**
+     * El método 'setup' se ejecuta antes de CADA test (@Test).
+     * Aquí definimos el comportamiento esperado de los Mocks.
+     */
     @Before
     fun setup() {
-        // Configuramos el comportamiento de los Mocks antes de cada test:
-
-        // Cuando se llama a context.getSharedPreferences(PREFS_NAME, MODE_PRIVATE),
-        // devolvemos nuestro mock de SharedPreferences.
+        // Simulación: Cuando se pide el fichero de preferencias (getSharedPreferences),
+        // siempre devolvemos nuestro mock de SharedPreferences.
         `when`(mockContext.getSharedPreferences(eq(PREFS_NAME), eq(Context.MODE_PRIVATE)))
             .thenReturn(mockSharedPreferences)
 
-        // Cuando se llama a sharedPreferences.edit(), devolvemos nuestro mock de Editor.
+        // Simulación: Cuando se llama a sharedPreferences.edit(), devolvemos nuestro mock de Editor.
         `when`(mockSharedPreferences.edit()).thenReturn(mockEditor)
 
-        // Hacemos que el método putInt() del editor devuelva el editor para encadenar llamadas.
+        // Simulación de los métodos de guardado (putInt, putString).
+        // Deben devolver el propio editor para permitir el encadenamiento de llamadas.
         `when`(mockEditor.putInt(any(), any())).thenReturn(mockEditor)
-        // Hacemos que el método putString() del editor devuelva el editor para encadenar llamadas.
         `when`(mockEditor.putString(any(), any())).thenReturn(mockEditor)
 
-        // El método apply() de la extensión KTX (que usa apply() internamente) no debe hacer nada.
-        // La extensión KTX internamente llama a edit().putX().apply() o edit().putX().commit()
-        // Para simplificar, asumimos que la extensión KTX llama a apply() en el editor.
-        `when`(mockEditor.apply()).then {} // No hace nada, solo satisface la llamada
+        // Simulación de apply(): La extensión KTX edit {} llama internamente a apply().
+        // Configuramos el mockEditor para que no haga nada ('then {}') cuando se llama a apply().
+        `when`(mockEditor.apply()).then {}
     }
 
-    // --- Tests para obtenerRecord ---
+    // -----------------------------------------------------------------------------------
+    // Tests para la función obtenerRecord
+    // -----------------------------------------------------------------------------------
 
     @Test
     fun obtenerRecord_retornaValorGuardado() {
+        // CASO 1: La preferencia existe.
         val recordEsperado = 500
 
-        // Configurar el mock: cuando se llame a getInt con la clave, retorna el valor esperado
+        // Configurar el mock: Cuando se llama a getInt con la clave, retorna el valor que guardamos.
         `when`(mockSharedPreferences.getInt(eq(KEY_RECORD), any()))
             .thenReturn(recordEsperado)
 
-        // Ejecutar la función a testear
+        // Ejecutar la función
         val recordObtenido = ControladorPreference.obtenerRecord(mockContext)
 
-        // Verificar el resultado
+        // Verificar: El valor obtenido debe coincidir con el valor simulado.
         assertEquals(recordEsperado, recordObtenido)
     }
 
     @Test
     fun obtenerRecord_retornaCeroPorDefecto() {
+        // CASO 2: La preferencia no existe (se espera el valor por defecto).
         val valorPorDefectoEsperado = 0
 
-        // Configurar el mock: cuando se llame a getInt, retorna 0 (el valor por defecto)
+        // Configurar el mock: Aseguramos que el valor devuelto es el por defecto (0)
+        // cuando se pasa 0 como segundo argumento.
         `when`(mockSharedPreferences.getInt(eq(KEY_RECORD), eq(0)))
             .thenReturn(valorPorDefectoEsperado)
 
@@ -77,33 +86,40 @@ class ControladorPreferenceTest {
         assertEquals(valorPorDefectoEsperado, recordObtenido)
     }
 
-    // --- Tests para actualizarRecord ---
+    // -----------------------------------------------------------------------------------
+    // Tests para la función actualizarRecord
+    // -----------------------------------------------------------------------------------
 
     @Test
-    fun actualizarRecord_guardaValorCorrecto() {
+    fun actualizarRecord_guardaValorCorrectoYHaceApply() {
         val nuevoRecord = 999
 
         // Ejecutar la función
         ControladorPreference.actualizarRecord(mockContext, nuevoRecord)
 
-        // Verificar que:
-        // 1. Se llamó al método edit()
+        // Verificaciones (Assertions sobre el comportamiento):
+
+        // 1. Verificar que se llamó a edit() para empezar la transacción.
         verify(mockSharedPreferences).edit()
 
-        // 2. Se llamó al método putInt con la clave y el valor correctos
+        // 2. Verificar que se llamó a putInt con la clave correcta (KEY_RECORD) y el nuevo valor.
         verify(mockEditor).putInt(eq(KEY_RECORD), eq(nuevoRecord))
 
-        // 3. Se llamó a apply() para guardar los cambios (implícito en la extensión KTX edit {})
+        // 3. Verificar que se llamó a apply() para guardar los cambios de forma asíncrona
+        // (esto es implícito en la extensión KTX 'edit {}').
         verify(mockEditor).apply()
     }
 
-    // --- Tests para obtenerFechayHora ---
+    // -----------------------------------------------------------------------------------
+    // Tests para la función obtenerFechayHora
+    // -----------------------------------------------------------------------------------
 
     @Test
     fun obtenerFechayHora_retornaFechaGuardada() {
+        // CASO 1: La fecha existe.
         val fechaEsperada = "2025-12-05 13:00:00"
 
-        // Configurar el mock: cuando se llame a getString con la clave, retorna la fecha esperada
+        // Configurar el mock: Cuando se llame a getString con la clave KEY_FECHA, retorna el valor simulado.
         `when`(mockSharedPreferences.getString(eq(KEY_FECHA), any()))
             .thenReturn(fechaEsperada)
 
@@ -116,9 +132,10 @@ class ControladorPreferenceTest {
 
     @Test
     fun obtenerFechayHora_retornaValorPorDefecto() {
+        // CASO 2: La fecha no existe.
         val valorPorDefectoEsperado = "fecha"
 
-        // Configurar el mock: cuando se llame a getString con la clave, retorna el valor por defecto
+        // Configurar el mock: Cuando se llame a getString, retorna el valor por defecto ("fecha").
         `when`(mockSharedPreferences.getString(eq(KEY_FECHA), eq("fecha")))
             .thenReturn(valorPorDefectoEsperado)
 
