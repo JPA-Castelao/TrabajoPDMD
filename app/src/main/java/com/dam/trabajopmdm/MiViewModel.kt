@@ -18,6 +18,8 @@ class MiViewModel(application: Application) : AndroidViewModel(application) {
 
     //variable record
     val record = MutableStateFlow<Int>(0)
+
+    //variable fecha y hora
     val fecha = MutableStateFlow<String>("")
 
     init {
@@ -42,6 +44,10 @@ class MiViewModel(application: Application) : AndroidViewModel(application) {
         return record.value
     }
 
+    /**
+     * Obtiene la fecha y hora actuales.
+     * @return La fecha actual.
+     */
     fun obtenerFechayHora(): String {
 
         fecha.value = ControladorPreference.obtenerFechayHora(context = getApplication()).toString()
@@ -49,12 +55,6 @@ class MiViewModel(application: Application) : AndroidViewModel(application) {
         return fecha.value
 
     }
-
-
-    /**
-     * Comprueba si un posible record es mayor que el actual.
-     * @param posibleRecord El posible record a comprobar.
-     */
 
 
     // variable estados del juego
@@ -121,15 +121,19 @@ class MiViewModel(application: Application) : AndroidViewModel(application) {
         numeroRandom()
     }
 
-    fun derrota(posibleRecord: Int) {
+    /**
+     * Comprueba si un posible record es mayor que el actual.
+     * Obtiene la fecha y hora del nuevo record
+     * @param posibleRecord El posible record a comprobar.
+     */
 
+    fun derrota(posibleRecord: Int) {
 
         if (posibleRecord > obtenerRecord()) {
             ControladorPreference.actualizarRecord(getApplication(), posibleRecord)
             record.value = posibleRecord
             fecha.value = LocalDateTime.now().toString()
         }
-
 
         puntuacion.value = 0
         posicion = 0
